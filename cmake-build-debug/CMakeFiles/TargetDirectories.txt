@@ -1,3 +1,0 @@
-/Users/nandysharma/dev/NaSha-Engine/cmake-build-debug/CMakeFiles/Nasha.dir
-/Users/nandysharma/dev/NaSha-Engine/cmake-build-debug/CMakeFiles/edit_cache.dir
-/Users/nandysharma/dev/NaSha-Engine/cmake-build-debug/CMakeFiles/rebuild_cache.dir
