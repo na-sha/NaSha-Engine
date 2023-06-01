@@ -20,7 +20,6 @@ target_include_directories(${PROJECT_NAME} PUBLIC ${VULKAN_SDK_PATH}/include)
 target_link_libraries(${PROJECT_NAME} Vulkan::Vulkan)
 
 # Setting up GLFW
-# Setting up GLFW
 set(GLFW_PATH /Users/nandysharma/CLionProjects/Nasha/Nasha/vendors/GLFW)
 if (DEFINED GLFW_PATH)
     set(GLFW_INCLUDE_DIRS "${GLFW_PATH}/include")
