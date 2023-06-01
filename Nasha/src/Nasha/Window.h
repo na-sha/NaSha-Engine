@@ -6,7 +6,7 @@
 #include <string>
 
 namespace Nasha{
-    class API Window{
+    class  Window{
     private:
         void initWindow();
 
