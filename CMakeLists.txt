@@ -11,7 +11,7 @@ add_executable(Nasha
         Nasha/src/Nasha/EntryPoint.h
         Sandbox/src/main.cpp
         Nasha/src/Nasha/Core.h
-        Nasha/src/Nasha.h)
+        Nasha/src/Nasha.h Nasha/src/Nasha/Device.cpp Nasha/src/Nasha/Device.h)
 
 # Setting up Vulkan
 find_package(Vulkan REQUIRED)

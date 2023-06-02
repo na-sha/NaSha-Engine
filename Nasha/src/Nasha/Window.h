@@ -7,9 +7,6 @@
 
 namespace Nasha{
     class  Window{
-    private:
-        void initWindow();
-
     public:
         Window(int w, int h, std::string name);
         ~Window();
@@ -18,6 +15,9 @@ namespace Nasha{
         Window &operator=(const Window &) = delete;
 
         bool shouldClose();
+
+    private:
+        void initWindow();
 
     private:
         const int m_width;

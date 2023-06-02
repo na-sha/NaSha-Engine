@@ -2,6 +2,7 @@
 
 #include "Core.h"
 #include "Window.h"
+#include "Device.h"
 
 // std
 #include <memory>
@@ -20,6 +21,7 @@ namespace Nasha{
 
     private:
         Window m_window{WIDTH, HEIGHT, "Nasha"};
+        Device m_device{};
 
     public:
         static constexpr int WIDTH = 800;

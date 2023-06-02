@@ -28,7 +28,7 @@ namespace Nasha{
             std::cout << "Successfully made a window: " << '\n'
                       << "Name: " << m_windowName
                       << " Width: " << m_width
-                      << " Height: " << m_height;
+                      << " Height: " << m_height << '\n';
         }
     }
 
