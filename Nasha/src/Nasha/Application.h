@@ -21,7 +21,7 @@ namespace Nasha{
 
     private:
         Window m_window{WIDTH, HEIGHT, "Nasha"};
-        Device m_device{};
+        Device m_device{m_window};
 
     public:
         static constexpr int WIDTH = 800;

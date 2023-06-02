@@ -15,6 +15,7 @@ namespace Nasha{
         Window &operator=(const Window &) = delete;
 
         bool shouldClose();
+        void createWindowSurface(VkInstance instance, VkSurfaceKHR *surface);
 
     private:
         void initWindow();
@@ -23,6 +24,6 @@ namespace Nasha{
         const int m_width;
         const int m_height;
         std::string m_windowName;
-        GLFWwindow* m_window{};
+        GLFWwindow* m_window{nullptr};
     };
 }
