@@ -31,7 +31,7 @@ namespace Nasha{
         const bool enableValidationLayers = true;
 #endif
     public:
-        Device(Window &window);
+        explicit Device(Window &window);
         ~Device();
 
         Device(const Device &) = delete;
@@ -43,6 +43,7 @@ namespace Nasha{
         VkExtent2D getSwapChainExtent() { return m_swapChainExtent; }
         uint32_t width() { return m_swapChainExtent.width; }
         uint32_t height() { return m_swapChainExtent.height; }
+        VkRenderPass getRenderPass() { return m_renderPass; }
 
     private:
         /*--------- Main Functions ---------*/
@@ -53,6 +54,7 @@ namespace Nasha{
         void createLogicalDevice();
         void createSwapChain();
         void createImageViews();
+        void createRenderPass();
 
         /*-------- Helper Functions --------*/
         [[nodiscard]] std::vector<const char*> getRequiredExtensions() const;
@@ -70,18 +72,19 @@ namespace Nasha{
     private:
         VkInstance m_instance{};
         VkDebugUtilsMessengerEXT m_debugMessenger{};
-        VkSurfaceKHR m_surface;
+        VkSurfaceKHR m_surface{};
         Window &m_window;
         VkPhysicalDevice m_physicalDevice = VK_NULL_HANDLE;
-        VkDevice m_device;
-        VkQueue m_graphicsQueue;
-        VkQueue m_presentQueue;
-        VkExtent2D m_windowExtent;
-        VkSwapchainKHR m_swapChain;
+        VkDevice m_device{};
+        VkQueue m_graphicsQueue{};
+        VkQueue m_presentQueue{};
+        VkExtent2D m_windowExtent{};
+        VkSwapchainKHR m_swapChain{};
         std::vector<VkImage> m_swapChainImages;
         std::vector<VkImageView> m_swapChainImageViews;
         VkFormat m_swapChainImageFormat;
-        VkExtent2D m_swapChainExtent;
+        VkExtent2D m_swapChainExtent{};
+        VkRenderPass m_renderPass{};
 
         const std::vector<const char*> m_validationLayers = { "VK_LAYER_KHRONOS_validation" };
         const std::vector<const char *> m_deviceExtensions = { VK_KHR_SWAPCHAIN_EXTENSION_NAME, "VK_KHR_portability_subset" };

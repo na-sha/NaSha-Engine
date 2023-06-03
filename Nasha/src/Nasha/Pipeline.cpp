@@ -14,6 +14,9 @@ namespace Nasha{
     }
 
     Pipeline::~Pipeline() {
+        vkDestroyPipeline(m_device.device(),
+                          m_graphicsPipeline,
+                          nullptr);
         vkDestroyShaderModule(m_device.device(),
                               m_fragShaderModule,
                               nullptr);
@@ -23,6 +26,9 @@ namespace Nasha{
         vkDestroyPipelineLayout(m_device.device(),
                                 m_pipelineLayout,
                                 nullptr);
+        vkDestroyRenderPass(m_device.device(),
+                            m_device.getRenderPass(),
+                            nullptr);
     }
 
     /*--------- Main functions ---------*/
@@ -167,6 +173,35 @@ namespace Nasha{
                                    nullptr,
                                    &m_pipelineLayout) != VK_SUCCESS) {
             throw std::runtime_error("failed to create pipeline layout!");
+        }
+
+        VkGraphicsPipelineCreateInfo pipelineInfo{};
+        pipelineInfo.sType = VK_STRUCTURE_TYPE_GRAPHICS_PIPELINE_CREATE_INFO;
+        pipelineInfo.stageCount = 2;
+        pipelineInfo.pStages = shaderStages.data();
+        pipelineInfo.pVertexInputState = &vertexInputInfo;
+        pipelineInfo.pInputAssemblyState = &inputAssembly;
+        pipelineInfo.pViewportState = &viewportState;
+        pipelineInfo.pRasterizationState = &rasterizer;
+        pipelineInfo.pMultisampleState = &multisampling;
+        pipelineInfo.pDepthStencilState = nullptr; // Optional
+        pipelineInfo.pColorBlendState = &colorBlending;
+        pipelineInfo.pDynamicState = &dynamicState;
+
+        pipelineInfo.layout = m_pipelineLayout;
+        pipelineInfo.renderPass = m_device.getRenderPass();
+        pipelineInfo.subpass = 0;
+
+        pipelineInfo.basePipelineHandle = VK_NULL_HANDLE; // Optional
+        pipelineInfo.basePipelineIndex = -1; // Optional
+
+        if (vkCreateGraphicsPipelines(m_device.device(),
+                                      VK_NULL_HANDLE,
+                                      1,
+                                      &pipelineInfo,
+                                      nullptr,
+                                      &m_graphicsPipeline) != VK_SUCCESS) {
+            throw std::runtime_error("failed to create graphics pipeline!");
         }
     }
 

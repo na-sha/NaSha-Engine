@@ -25,5 +25,6 @@ namespace Nasha{
         VkShaderModule m_vertShaderModule{};
         VkShaderModule m_fragShaderModule{};
         VkPipelineLayout m_pipelineLayout{};
+        VkPipeline m_graphicsPipeline{};
     };
 }
