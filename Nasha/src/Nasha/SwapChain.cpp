@@ -1,8 +1,33 @@
 #include "SwapChain.h"
 
+#include "Device.h"
+
+// vulkan headers
+#include <vulkan/vulkan.h>
+
+// std lib headers
+#include <memory>
+#include <string>
+#include <vector>
+
 //Remember to add back to cMake
 
 namespace Nasha{
+    /*--------- Main Functions ---------*/
+    SwapChain::SwapChain(Device &deviceRef, VkExtent2D windowExtent)
+        :m_device{deviceRef}, m_windowExtent{windowExtent}{
+        init();
+    }
+
+    SwapChain::~SwapChain() {}
+
+    void SwapChain::init() {
+        createSwapChain();
+    }
+
+    void SwapChain::createSwapChain() {
+
+    }
 
     /*-------- Helper Functions --------*/
     VkSurfaceFormatKHR SwapChain::chooseSwapSurfaceFormat(const std::vector<VkSurfaceFormatKHR> &availableFormats) {
@@ -30,16 +55,13 @@ namespace Nasha{
         if (capabilities.currentExtent.width != std::numeric_limits<uint32_t>::max()) {
             return capabilities.currentExtent;
         } else {
-            int width, height;
-            glfwGetFramebufferSize(window, &width, &height);
-
-            VkExtent2D actualExtent = {
-                    static_cast<uint32_t>(width),
-                    static_cast<uint32_t>(height)
-            };
-
-            actualExtent.width = std::clamp(actualExtent.width, capabilities.minImageExtent.width, capabilities.maxImageExtent.width);
-            actualExtent.height = std::clamp(actualExtent.height, capabilities.minImageExtent.height, capabilities.maxImageExtent.height);
+            VkExtent2D actualExtent = m_windowExtent;
+            actualExtent.width = std::max(
+                    capabilities.minImageExtent.width,
+                    std::min(capabilities.maxImageExtent.width, actualExtent.width));
+            actualExtent.height = std::max(
+                    capabilities.minImageExtent.height,
+                    std::min(capabilities.maxImageExtent.height, actualExtent.height));
 
             return actualExtent;
         }

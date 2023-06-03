@@ -49,9 +49,13 @@ namespace Nasha{
         pickPhysicalDevice();
         createLogicalDevice();
         createSwapChain();
+        createImageViews();
     }
 
     Device::~Device() {
+        for (auto imageView : m_swapChainImageViews) {
+            vkDestroyImageView(m_device, imageView, nullptr);
+        }
         vkDestroySwapchainKHR(m_device ,m_swapChain , nullptr);
         vkDestroyDevice(m_device, nullptr);
         if (enableValidationLayers) {
@@ -352,6 +356,54 @@ namespace Nasha{
                                  nullptr,
                                  &m_swapChain) != VK_SUCCESS){
             throw std::runtime_error("failed to create swap chain!");
+        }
+
+        vkGetSwapchainImagesKHR(m_device,
+                                m_swapChain,
+                                &imageCount,
+                                nullptr);
+        m_swapChainImages.resize(imageCount);
+        vkGetSwapchainImagesKHR(m_device,
+                                m_swapChain,
+                                &imageCount,
+                                m_swapChainImages.data());
+        m_swapChainImageFormat = surfaceFormat.format;
+        m_swapChainExtent = extent;
+    }
+
+    void Device::createImageViews() {
+        m_swapChainImageViews.resize(m_swapChainImages.size());
+
+        for (size_t i = 0; i < m_swapChainImages.size(); i++) {
+            /*
+            typedef struct VkImageViewCreateInfo {
+                VkStructureType            sType;
+                const void*                pNext;
+                VkImageViewCreateFlags     flags;
+                VkImage                    image;
+                VkImageViewType            viewType;
+                VkFormat                   format;
+                VkComponentMapping         components;
+                VkImageSubresourceRange    subresourceRange;
+            } VkImageViewCreateInfo;
+            */
+            VkImageViewCreateInfo viewInfo{};
+            viewInfo.sType = VK_STRUCTURE_TYPE_IMAGE_VIEW_CREATE_INFO;
+            viewInfo.image = m_swapChainImages[i];
+            viewInfo.viewType = VK_IMAGE_VIEW_TYPE_2D;
+            viewInfo.format = m_swapChainImageFormat;
+            viewInfo.subresourceRange.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
+            viewInfo.subresourceRange.baseMipLevel = 0;
+            viewInfo.subresourceRange.levelCount = 1;
+            viewInfo.subresourceRange.baseArrayLayer = 0;
+            viewInfo.subresourceRange.layerCount = 1;
+
+            if (vkCreateImageView(m_device,
+                                  &viewInfo,
+                                  nullptr,
+                                  &m_swapChainImageViews[i]) !=VK_SUCCESS){
+                throw std::runtime_error("failed to create texture image view!");
+            }
         }
     }
 

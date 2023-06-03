@@ -7,7 +7,7 @@
 namespace Nasha{
     class SwapChain {
     public:
-        SwapChain();
+        SwapChain(Device &deviceRef, VkExtent2D windowExtent);
         ~SwapChain();
 
         SwapChain(const SwapChain &) = delete;
@@ -15,6 +15,8 @@ namespace Nasha{
 
     private:
         /*--------- Main Functions ---------*/
+        void init();
+        void createSwapChain();
 
         /*-------- Helper Functions --------*/
         VkSurfaceFormatKHR chooseSwapSurfaceFormat(const std::vector<VkSurfaceFormatKHR>& availableFormats);
@@ -23,5 +25,7 @@ namespace Nasha{
 
     public:
     private:
+        Device &m_device;
+        VkExtent2D m_windowExtent;
     };
 }

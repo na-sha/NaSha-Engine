@@ -3,6 +3,7 @@
 #include "Core.h"
 #include "Window.h"
 #include "Device.h"
+#include "Pipeline.h"
 
 // std
 #include <memory>
@@ -22,6 +23,9 @@ namespace Nasha{
     private:
         Window m_window{WIDTH, HEIGHT, "Nasha"};
         Device m_device{m_window};
+        Pipeline m_pipeline{m_device,
+                            "../Nasha/src/Nasha/shaders/shader.vert.spv",
+                            "../Nasha/src/Nasha/shaders/shader.frag.spv"};
 
     public:
         static constexpr int WIDTH = 800;
