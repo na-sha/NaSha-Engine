@@ -14,7 +14,7 @@ add_executable(Nasha
         Nasha/src/Nasha/EntryPoint.h
         Nasha/src/Nasha.h
         Nasha/src/Nasha/Device.cpp
-        Nasha/src/Nasha/Device.h Nasha/src/Nasha/Pipeline.cpp Nasha/src/Nasha/Pipeline.h)
+        Nasha/src/Nasha/Device.h Nasha/src/Nasha/Pipeline.cpp Nasha/src/Nasha/Pipeline.h Nasha/src/Nasha/Buffers.cpp Nasha/src/Nasha/Buffers.h)
 
 # Setting up Vulkan
 find_package(Vulkan REQUIRED)

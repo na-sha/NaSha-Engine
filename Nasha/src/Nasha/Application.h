@@ -4,6 +4,7 @@
 #include "Window.h"
 #include "Device.h"
 #include "Pipeline.h"
+#include "Buffers.h"
 
 // std
 #include <memory>
@@ -23,6 +24,7 @@ namespace Nasha{
     private:
         Window m_window{WIDTH, HEIGHT, "Nasha"};
         Device m_device{m_window};
+        Buffers m_buffers{m_device};
         Pipeline m_pipeline{m_device,
                             "../Nasha/src/Nasha/shaders/shader.vert.spv",
                             "../Nasha/src/Nasha/shaders/shader.frag.spv"};

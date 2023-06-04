@@ -44,6 +44,7 @@ namespace Nasha{
         uint32_t width() { return m_swapChainExtent.width; }
         uint32_t height() { return m_swapChainExtent.height; }
         VkRenderPass getRenderPass() { return m_renderPass; }
+        std::vector<VkImageView> getSwapChainImageViews() { return m_swapChainImageViews; }
 
     private:
         /*--------- Main Functions ---------*/
@@ -55,6 +56,7 @@ namespace Nasha{
         void createSwapChain();
         void createImageViews();
         void createRenderPass();
+        void createCommandPool();
 
         /*-------- Helper Functions --------*/
         [[nodiscard]] std::vector<const char*> getRequiredExtensions() const;
@@ -85,6 +87,7 @@ namespace Nasha{
         VkFormat m_swapChainImageFormat;
         VkExtent2D m_swapChainExtent{};
         VkRenderPass m_renderPass{};
+        VkCommandPool m_commandPool{};
 
         const std::vector<const char*> m_validationLayers = { "VK_LAYER_KHRONOS_validation" };
         const std::vector<const char *> m_deviceExtensions = { VK_KHR_SWAPCHAIN_EXTENSION_NAME, "VK_KHR_portability_subset" };

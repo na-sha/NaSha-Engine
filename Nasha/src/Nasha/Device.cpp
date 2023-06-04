@@ -51,9 +51,11 @@ namespace Nasha{
         createSwapChain();
         createImageViews();
         createRenderPass();
+        createCommandPool();
     }
 
     Device::~Device() {
+        vkDestroyCommandPool(m_device, m_commandPool, nullptr);
         for (auto imageView : m_swapChainImageViews) {
             vkDestroyImageView(m_device, imageView, nullptr);
         }
@@ -440,6 +442,22 @@ namespace Nasha{
                                nullptr,
                                &m_renderPass) != VK_SUCCESS) {
             throw std::runtime_error("failed to create render pass!");
+        }
+    }
+
+    void Device::createCommandPool() {
+        QueueFamilyIndices queueFamilyIndices = findQueueFamilies(m_physicalDevice);
+
+        VkCommandPoolCreateInfo poolInfo{};
+        poolInfo.sType = VK_STRUCTURE_TYPE_COMMAND_POOL_CREATE_INFO;
+        poolInfo.flags = VK_COMMAND_POOL_CREATE_RESET_COMMAND_BUFFER_BIT;
+        poolInfo.queueFamilyIndex = queueFamilyIndices.graphicsFamily.value();
+
+        if (vkCreateCommandPool(m_device,
+                                &poolInfo,
+                                nullptr,
+                                &m_commandPool) != VK_SUCCESS) {
+            throw std::runtime_error("failed to create command pool!");
         }
     }
 
