@@ -8,3 +8,6 @@ cd build-dir
 cmake ..
 make
 ```
+<br><br>
+**Current Progress**
+![Screenshot 2023-06-05 at 12 58 11 PM](https://github.com/na-sha/NaSha-Engine/assets/69229070/3a308ae3-8f73-498d-9732-42352a101728)
