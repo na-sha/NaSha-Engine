@@ -2,16 +2,27 @@
 
 #include "Core.h"
 #include "Window.h"
-#include "Device.h"
 #include "Pipeline.h"
-#include "Buffers.h"
+#include "Device.h"
+#include "SwapChain.h"
+#include "Model.h"
 
-// std
 #include <memory>
 #include <vector>
 
-namespace Nasha{
-    class API Application{
+namespace Nasha {
+
+    class API Application {
+    private:
+        void loadModels();
+        void createPipelineLayout();
+        void createPipeline();
+        void createCommandBuffers();
+        void freeCommandBuffers();
+        void drawFrame();
+        void recreateSwapchain();
+        void recordCommandBuffer(int imageIndex);
+
     public:
         Application();
         virtual ~Application();
@@ -22,22 +33,24 @@ namespace Nasha{
         void Run();
 
     private:
-        Window m_window{WIDTH, HEIGHT, "Nasha"};
-        Device m_device{m_window};
-        Buffers m_buffers{m_device};
-        Pipeline m_pipeline{m_device,
-                            "../Nasha/src/Nasha/shaders/shader.vert.spv",
-                            "../Nasha/src/Nasha/shaders/shader.frag.spv"};
+        Window window{WIDTH, HEIGHT, "NASHA"};
+        Device device{window};
+        std::unique_ptr<SwapChain> swapChain;
+        std::unique_ptr<Pipeline> pipeline;
+        VkPipelineLayout pipelineLayout{};
+        std::vector<VkCommandBuffer> commandBuffers;
+        std::unique_ptr<Model> model;
+//        Pipeline pipeline{device,
+//                          "../Nasha/src/Nasha/shaders/glsl_shader.vert.spv",
+//                          "../Nasha/src/Nasha/shaders/glsl_shader.frag.spv",
+//                          Pipeline::defaultPipelineConfigInfo(WIDTH, HEIGHT)};
 
     public:
         static constexpr int WIDTH = 800;
         static constexpr int HEIGHT = 600;
-#ifdef NDEBUG
-        static const bool debug = false;
-#else
-        static const bool debug = true;
-#endif
     };
 
+// We have to define it in client
     Application* createApplication();
-}
+}  // namespace Nasha
+

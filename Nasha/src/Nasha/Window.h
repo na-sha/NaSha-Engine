@@ -1,12 +1,15 @@
 #pragma once
 
-#define GLFW_INCLUDE_VULKAN
-#include "GLFW/glfw3.h"
-
+#include <vulkan/vulkan.h>
+#include <GLFW/glfw3.h>
 #include <string>
+#include <stdexcept>
 
-namespace Nasha{
-    class  Window{
+namespace Nasha {
+    class Window {
+    private:
+        void initWindow();
+        static void frameBufferResizeCallback(GLFWwindow* window, int width, int height);
     public:
         Window(int w, int h, std::string name);
         ~Window();
@@ -16,14 +19,16 @@ namespace Nasha{
 
         bool shouldClose();
         void createWindowSurface(VkInstance instance, VkSurfaceKHR *surface);
+        VkExtent2D getExtent();
+        inline bool wasWindowResized(){ return frameBufferResized; }
+        inline void resetWindowResizedFlag(){ frameBufferResized = false; }
 
     private:
-        void initWindow();
-
-    private:
-        const int m_width;
-        const int m_height;
-        std::string m_windowName;
-        GLFWwindow* m_window{nullptr};
+        int width;
+        int height;
+        bool frameBufferResized = false;
+        std::string windowName;
+        GLFWwindow* window{nullptr};
     };
-}
+}  // namespace Nasha
+

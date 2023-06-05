@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.25)
 project(Nasha
         LANGUAGES CXX)
 
-set(CMAKE_CXX_STANDARD 20)
+set(CMAKE_CXX_STANDARD 17)
 
 add_executable(Nasha
         Sandbox/src/main.cpp
@@ -13,8 +13,14 @@ add_executable(Nasha
         Nasha/src/Nasha/Window.cpp
         Nasha/src/Nasha/EntryPoint.h
         Nasha/src/Nasha.h
+        Nasha/src/Nasha/Pipeline.cpp
+        Nasha/src/Nasha/Pipeline.h
         Nasha/src/Nasha/Device.cpp
-        Nasha/src/Nasha/Device.h Nasha/src/Nasha/Pipeline.cpp Nasha/src/Nasha/Pipeline.h Nasha/src/Nasha/Buffers.cpp Nasha/src/Nasha/Buffers.h)
+        Nasha/src/Nasha/Device.h
+        Nasha/src/Nasha/SwapChain.cpp
+        Nasha/src/Nasha/SwapChain.h
+        Nasha/src/Nasha/Model.cpp
+        Nasha/src/Nasha/Model.h)
 
 # Setting up Vulkan
 find_package(Vulkan REQUIRED)
@@ -35,8 +41,3 @@ endif()
 target_include_directories(${PROJECT_NAME} PUBLIC ${GLFW_INCLUDE_DIRS})
 target_link_libraries(${PROJECT_NAME} ${GLFW_LIB}/libglfw.3.3.dylib "-framework OpenGL -framework Cocoa -framework IOKit -framework CoreVideo")
 
-
-#setting up sdplog
-set(SPDLOG_PATH ${PROJECT_SOURCE_DIR}/Nasha/vendors/spdlog)
-set(SPDLOG_INCLUDE_DIRS "${SPDLOG_PATH}/include")
-target_include_directories(${PROJECT_NAME} PUBLIC ${SPDLOG_INCLUDE_DIRS})

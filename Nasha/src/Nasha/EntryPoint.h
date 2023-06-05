@@ -1,7 +1,5 @@
 #pragma once
 
-#include <iostream>
-
 extern Nasha::Application* Nasha::createApplication();
 
 int main(int argc, char** argv){
