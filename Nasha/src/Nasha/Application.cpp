@@ -2,18 +2,20 @@
 
 #define GLM_FORCE_DEPTH_ZERO_TO_ONE
 #include <glm/glm.hpp>
+#include <glm/gtc/constants.hpp>
 
 #include <stdexcept>
 
 namespace Nasha{
 
     struct SimplePushConstant{
+        glm::mat2 transform{1.0f};
         glm::vec2 offset;
         alignas(16) glm::vec3 color;
     };
 
     Application::Application(){
-        loadModels();
+        loadGameObjects();
         createPipelineLayout();
         recreateSwapchain();
         createCommandBuffers();
@@ -32,13 +34,32 @@ namespace Nasha{
         vkDeviceWaitIdle(device.device());
     }
 
-    void Application::loadModels() {
+    void Application::loadGameObjects() {
         std::vector<Model::Vertex> vertices{
                 {{0.0f, -0.5f}, {1.0f, 0.0f, 0.0f}},
                 {{0.5f, 0.5f}, {0.0f, 1.0f, 0.0f}},
                 {{-0.5f, 0.5f}, {0.0f, 0.0f, 1.0f}}
         };
-        model = std::make_unique<Model>(device, vertices);
+        auto model = std::make_shared<Model>(device, vertices);
+
+        std::vector<glm::vec3> colors{
+                {1.f, .7f, .73f},
+                {1.f, .87f, .73f},
+                {1.f, 1.f, .73f},
+                {.73f, 1.f, .8f},
+                {.73, .88f, 1.f}  //
+        };
+        for (auto& color : colors) {
+            color = glm::pow(color, glm::vec3{2.2f});
+        }
+        for (int i = 0; i < 40; i++) {
+            auto triangle = GameObject::creteGameObject();
+            triangle.m_model = model;
+            triangle.m_transform2D.scale = glm::vec2(.5f) + i * 0.025f;
+            triangle.m_transform2D.rotation = i * glm::pi<float>() * .025f;
+            triangle.m_color = colors[i % colors.size()];
+            gameObjects.push_back(std::move(triangle));
+        }
     }
 
     void Application::createPipelineLayout() {
@@ -123,9 +144,6 @@ namespace Nasha{
     }
 
     void Application::recordCommandBuffer(int imageIndex) {
-        static int frame = 0;
-        frame = (frame + 1)  % 100;
-
         VkCommandBufferBeginInfo beginInfo{};
         beginInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO;
 
@@ -165,26 +183,39 @@ namespace Nasha{
         vkCmdSetViewport(commandBuffers[imageIndex], 0, 1, &viewport);
         vkCmdSetScissor(commandBuffers[imageIndex], 0, 1, &scissor);
 
-        pipeline -> bind(commandBuffers[imageIndex]);
-        model ->bind(commandBuffers[imageIndex]);
+        renderGameObjects(commandBuffers[imageIndex]);
 
-        for (int j = 0; j < 4; j++) {
+        vkCmdEndRenderPass(commandBuffers[imageIndex]);
+        if (vkEndCommandBuffer(commandBuffers[imageIndex]) != VK_SUCCESS){
+            throw std::runtime_error("failed to record command buffer");
+        }
+    }
+
+    void Application::renderGameObjects(VkCommandBuffer commandBuffer) {
+        // update
+        int i = 0;
+        for (auto& obj : gameObjects) {
+            i += 1;
+            obj.m_transform2D.rotation =
+                    glm::mod<float>(obj.m_transform2D.rotation + 0.001f * i, 2.f * glm::pi<float>());
+        }
+
+        pipeline -> bind(commandBuffer);
+
+        for(auto& obj: gameObjects){
             SimplePushConstant push{};
-            push.offset = {-0.5f + frame * 0.02f, -0.4f + j*0.25f};
-            push.color = {0.0f, 0.0f, 0.2f + 0.2f * j};
+            push.offset = obj.m_transform2D.translation;
+            push.color = obj.m_color;
+            push.transform = obj.m_transform2D.mat2();
 
-            vkCmdPushConstants(commandBuffers[imageIndex],
+            vkCmdPushConstants(commandBuffer,
                                pipelineLayout,
                                VK_SHADER_STAGE_VERTEX_BIT | VK_SHADER_STAGE_FRAGMENT_BIT,
                                0,
                                sizeof(SimplePushConstant),
                                &push);
-            model -> draw(commandBuffers[imageIndex]);
-        }
-
-        vkCmdEndRenderPass(commandBuffers[imageIndex]);
-        if (vkEndCommandBuffer(commandBuffers[imageIndex]) != VK_SUCCESS){
-            throw std::runtime_error("failed to record command buffer");
+            obj.m_model ->bind(commandBuffer);
+            obj.m_model ->draw(commandBuffer);
         }
     }
 
