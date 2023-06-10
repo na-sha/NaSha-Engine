@@ -20,7 +20,7 @@ add_executable(Nasha
         Nasha/src/Nasha/SwapChain.cpp
         Nasha/src/Nasha/SwapChain.h
         Nasha/src/Nasha/Model.cpp
-        Nasha/src/Nasha/Model.h Nasha/src/Nasha/GameObject.h Nasha/src/Nasha/Renderer.cpp Nasha/src/Nasha/Renderer.h)
+        Nasha/src/Nasha/Model.h Nasha/src/Nasha/GameObject.h Nasha/src/Nasha/Renderer.cpp Nasha/src/Nasha/Renderer.h Nasha/src/Nasha/RenderSystem.cpp Nasha/src/Nasha/RenderSystem.h)
 
 # Setting up Vulkan
 find_package(Vulkan REQUIRED)
