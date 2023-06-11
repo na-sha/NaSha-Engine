@@ -9,8 +9,7 @@
 namespace Nasha{
 
     struct SimplePushConstant{
-        glm::mat2 transform{1.0f};
-        glm::vec2 offset;
+        glm::mat4 transform{1.0f};
         alignas(16) glm::vec3 color;
     };
 
@@ -58,22 +57,22 @@ namespace Nasha{
                                               pipelineConfig);
     }
 
-    void RenderSystem::renderGameObjects(VkCommandBuffer commandBuffer, std::vector<GameObject>& gameObjects) {
-        // update
-        int i = 0;
-        for (auto& obj : gameObjects) {
-            i += 1;
-            obj.m_transform2D.rotation =
-                    glm::mod<float>(obj.m_transform2D.rotation + 0.001f * i, 2.f * glm::pi<float>());
-        }
+    void RenderSystem::renderGameObjects(VkCommandBuffer commandBuffer,
+                                         std::vector<GameObject>& gameObjects) {
+        m_pipeline ->bind(commandBuffer);
 
+        for (auto& obj : gameObjects) {
+            obj.m_transform.rotation.y =
+                    glm::mod(obj.m_transform.rotation.y + 0.01f, glm::two_pi<float>());
+            obj.m_transform.rotation.x =
+                    glm::mod(obj.m_transform.rotation.x + 0.005f, glm::two_pi<float>());
+        }
         m_pipeline -> bind(commandBuffer);
 
         for(auto& obj: gameObjects){
             SimplePushConstant push{};
-            push.offset = obj.m_transform2D.translation;
             push.color = obj.m_color;
-            push.transform = obj.m_transform2D.mat2();
+            push.transform = obj.m_transform.mat4();
 
             vkCmdPushConstants(commandBuffer,
                                m_pipelineLayout,
