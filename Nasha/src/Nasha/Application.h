@@ -6,6 +6,7 @@
 #include "RenderSystem.h"
 #include "Renderer.h"
 #include "GameObject.h"
+#include "Camera.h"
 
 #include <memory>
 #include <vector>

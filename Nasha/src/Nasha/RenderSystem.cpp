@@ -58,7 +58,8 @@ namespace Nasha{
     }
 
     void RenderSystem::renderGameObjects(VkCommandBuffer commandBuffer,
-                                         std::vector<GameObject>& gameObjects) {
+                                         std::vector<GameObject>& gameObjects,
+                                         const Camera& camera) {
         m_pipeline ->bind(commandBuffer);
 
         for (auto& obj : gameObjects) {
@@ -72,7 +73,7 @@ namespace Nasha{
         for(auto& obj: gameObjects){
             SimplePushConstant push{};
             push.color = obj.m_color;
-            push.transform = obj.m_transform.mat4();
+            push.transform = camera.getProjectionMatrix() * obj.m_transform.mat4();
 
             vkCmdPushConstants(commandBuffer,
                                m_pipelineLayout,

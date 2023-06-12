@@ -1,5 +1,6 @@
 #pragma once
 
+#include "Camera.h"
 #include "Pipeline.h"
 #include "Device.h"
 #include "GameObject.h"
@@ -16,7 +17,9 @@ namespace Nasha {
         RenderSystem(const RenderSystem &) = delete;
         RenderSystem &operator=(const RenderSystem &) = delete;
 
-        void renderGameObjects(VkCommandBuffer commandBuffer, std::vector<GameObject>& gameObjects);
+        void renderGameObjects(VkCommandBuffer commandBuffer,
+                               std::vector<GameObject>& gameObjects,
+                               const Camera& camera);
 
     private:
         void createPipelineLayout();
