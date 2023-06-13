@@ -62,18 +62,17 @@ namespace Nasha{
                                          const Camera& camera) {
         m_pipeline ->bind(commandBuffer);
 
+        auto projectionView = camera.getProjectionMatrix() * camera.getViewMatrix();
+
         for (auto& obj : gameObjects) {
             obj.m_transform.rotation.y =
                     glm::mod(obj.m_transform.rotation.y + 0.01f, glm::two_pi<float>());
             obj.m_transform.rotation.x =
                     glm::mod(obj.m_transform.rotation.x + 0.005f, glm::two_pi<float>());
-        }
-        m_pipeline -> bind(commandBuffer);
 
-        for(auto& obj: gameObjects){
             SimplePushConstant push{};
             push.color = obj.m_color;
-            push.transform = camera.getProjectionMatrix() * obj.m_transform.mat4();
+            push.transform = projectionView * obj.m_transform.mat4();
 
             vkCmdPushConstants(commandBuffer,
                                m_pipelineLayout,
