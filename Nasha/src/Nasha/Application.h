@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Core.h"
+#include "Events.h"
 #include "Window.h"
 #include "Device.h"
 #include "RenderSystem.h"

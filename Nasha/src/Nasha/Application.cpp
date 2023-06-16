@@ -20,6 +20,9 @@ namespace Nasha{
         // camera.setViewDirection(glm::vec3(0.f), glm::vec3(0.5f, 0.f, 1.f));
         camera.setViewTarget(glm::vec3(-1.f, -2.f, 2.f), glm::vec3(0.f, 0.f, 2.5f));
 
+        auto viewerObject = GameObject::creteGameObject();
+        Events cameraController{};
+
         auto currentTime = std::chrono::high_resolution_clock::now();
 
         while(!window.shouldClose()){
@@ -28,6 +31,9 @@ namespace Nasha{
             auto newTime = std::chrono::high_resolution_clock::now();
             float frameTime = std::chrono::duration<float, std::chrono::seconds::period>(newTime - currentTime).count();
             currentTime = newTime;
+
+            cameraController.moveInPlaneXZ(window.getGLFWwindow(), frameTime, viewerObject);
+            camera.setViewYXZ(viewerObject.m_transform.translation, viewerObject.m_transform.rotation);
 
             float aspect = renderer.getAspectRatio();
             //camera.setOrthographicProjection(-aspect, aspect, -1, 1, -1, 1);

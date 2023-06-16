@@ -7,9 +7,6 @@
 
 namespace Nasha {
     class Window {
-    private:
-        void initWindow();
-        static void frameBufferResizeCallback(GLFWwindow* window, int width, int height);
     public:
         Window(int w, int h, std::string name);
         ~Window();
@@ -20,8 +17,15 @@ namespace Nasha {
         bool shouldClose();
         void createWindowSurface(VkInstance instance, VkSurfaceKHR *surface);
         VkExtent2D getExtent();
-        inline bool wasWindowResized(){ return frameBufferResized; }
+        [[nodiscard]] inline bool wasWindowResized() const { return frameBufferResized; }
         inline void resetWindowResizedFlag(){ frameBufferResized = false; }
+        [[nodiscard]] GLFWwindow *getGLFWwindow() const { return window; }
+
+    private:
+        void initWindow();
+        static void frameBufferResizeCallback(GLFWwindow* window, int width, int height);
+
+    public:
 
     private:
         int width;
