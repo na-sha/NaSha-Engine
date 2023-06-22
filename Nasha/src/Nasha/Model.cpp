@@ -6,8 +6,8 @@
 namespace Nasha{
 
     Model::Model(Device &device,
-                 const std::vector<Vertex> &vertices) : m_device(device) {
-        createVertexBuffers(vertices);
+                 const Model::Builder& builder) : m_device(device) {
+        createVertexBuffers(builder.vertices);
     };
 
     Model::~Model(){
@@ -17,6 +17,15 @@ namespace Nasha{
         vkFreeMemory(m_device.device(),
                      m_vertexBufferMemory,
                      nullptr);
+
+        if (hasIndexBuffer){
+            vkDestroyBuffer(m_device.device(),
+                            m_indexBuffer,
+                            nullptr);
+            vkFreeMemory(m_device.device(),
+                         m_indexBufferMemory,
+                         nullptr);
+        }
     };
 
     void Model::bind(VkCommandBuffer commandBuffer) {
@@ -55,6 +64,32 @@ namespace Nasha{
 
         memcpy(data, vertices.data(), static_cast<size_t>(bufferSize));
         vkUnmapMemory(m_device.device(), m_vertexBufferMemory);
+    }
+
+    void Model::createIndexBuffers(const std::vector<uint32_t> &indices) {
+        m_indexCount = static_cast<uint32_t>(indices.size());
+        hasIndexBuffer = m_indexCount > 0;
+        if (!hasIndexBuffer){
+            return;
+        }
+        VkDeviceSize bufferSize = sizeof(indices[0]) * m_indexCount;
+
+        m_device.createBuffer(bufferSize,
+                              VK_BUFFER_USAGE_INDEX_BUFFER_BIT,
+                              VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT,
+                              m_indexBuffer,
+                              m_indexBufferMemory);
+
+        void* data;
+        vkMapMemory(m_device.device(),
+                    m_indexBufferMemory,
+                    0,
+                    bufferSize,
+                    0,
+                    &data);
+
+        memcpy(data, indices.data(), static_cast<size_t>(bufferSize));
+        vkUnmapMemory(m_device.device(), m_indexBufferMemory);
     }
 
     std::vector<VkVertexInputBindingDescription> Model::Vertex::getBindingDescriptions() {
