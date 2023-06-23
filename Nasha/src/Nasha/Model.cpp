@@ -1,5 +1,9 @@
 #include "Model.h"
 
+#define TINYOBJLOADER_IMPLEMENTATION
+#include <tiny_obj_loader.h>
+
+#include <iostream>
 #include <cassert>
 #include <cstring>
 
@@ -145,6 +149,14 @@ namespace Nasha{
                      nullptr);
     }
 
+    std::unique_ptr<Model> Model::createModelFromFile(Device &device, const std::string &filepath) {
+        Builder builder{};
+        builder.loadModel(filepath);
+        auto test = builder.vertices;
+        std::cout << "Vertex count: " << builder.vertices.size() << '\n';
+        return std::make_unique<Model>(device, builder);
+    }
+
     std::vector<VkVertexInputBindingDescription> Model::Vertex::getBindingDescriptions() {
         std::vector<VkVertexInputBindingDescription> bindingDescriptions(1);
         bindingDescriptions[0].binding = 0;
@@ -165,5 +177,61 @@ namespace Nasha{
         attributeDescriptions[1].format = VK_FORMAT_R32G32B32_SFLOAT;
         attributeDescriptions[1].offset = offsetof(Vertex, color);
         return attributeDescriptions;
+    }
+
+    void Model::Builder::loadModel(const std::string &filepath) {
+        tinyobj::attrib_t attrib;
+        std::vector<tinyobj::shape_t> shapes;
+        std::vector<tinyobj::material_t> materials;
+        std::string warn, err;
+
+        if (!tinyobj::LoadObj(&attrib, &shapes, &materials, &warn, &err, filepath.c_str())){
+            throw std::runtime_error(warn + err);
+        }
+
+        vertices.clear();
+        indices.clear();
+
+        for (const auto& shape: shapes){
+            for(const auto& index: shape.mesh.indices){
+                Vertex vertex{};
+
+                if (index.vertex_index >= 0){
+                    vertex.position = {
+                            attrib.vertices[3 * index.vertex_index + 0],
+                            attrib.vertices[3 * index.vertex_index + 1],
+                            attrib.vertices[3 * index.vertex_index + 2]
+                    };
+
+                    auto colorIndex = 3 * index.vertex_index + 2;
+                    if (colorIndex < attrib.colors.size()){
+                        vertex.color = {
+                                attrib.colors[colorIndex - 2],
+                                attrib.colors[colorIndex - 1],
+                                attrib.colors[colorIndex - 0]
+                        };
+                    }else{
+                        vertex.color = {1.f, 1.f, 1.f};
+                    }
+                }
+
+                if (index.normal_index >= 0){
+                    vertex.normal = {
+                            attrib.normals[3 * index.normal_index + 0],
+                            attrib.normals[3 * index.normal_index + 1],
+                            attrib.normals[3 * index.normal_index + 2]
+                    };
+                }
+
+                if (index.texcoord_index >= 0){
+                    vertex.uv = {
+                            attrib.normals[2 * index.texcoord_index + 0],
+                            attrib.normals[2 * index.texcoord_index + 1],
+                    };
+                }
+
+                vertices.push_back(vertex);
+            }
+        }
     }
 }
