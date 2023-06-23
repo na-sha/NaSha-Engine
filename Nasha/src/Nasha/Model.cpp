@@ -1,11 +1,25 @@
 #include "Model.h"
+#include "Utils.h"
 
 #define TINYOBJLOADER_IMPLEMENTATION
 #include <tiny_obj_loader.h>
+#define GLM_ENABLE_EXPERIMENTAL
+#include <glm/gtx/hash.hpp>
 
-#include <iostream>
 #include <cassert>
 #include <cstring>
+#include <unordered_map>
+
+namespace std{
+    template <>
+    struct hash<Nasha::Model::Vertex>{
+        size_t operator()(Nasha::Model::Vertex const& vertex) const{
+            size_t seed = 0;
+            Nasha::hashCombine(seed, vertex.position, vertex.color, vertex.normal, vertex.uv);
+            return seed;
+        }
+    };
+}
 
 namespace Nasha{
 
@@ -153,7 +167,6 @@ namespace Nasha{
         Builder builder{};
         builder.loadModel(filepath);
         auto test = builder.vertices;
-        std::cout << "Vertex count: " << builder.vertices.size() << '\n';
         return std::make_unique<Model>(device, builder);
     }
 
@@ -192,6 +205,7 @@ namespace Nasha{
         vertices.clear();
         indices.clear();
 
+        std::unordered_map<Vertex, uint32_t> uniqueVertices{};
         for (const auto& shape: shapes){
             for(const auto& index: shape.mesh.indices){
                 Vertex vertex{};
@@ -230,7 +244,11 @@ namespace Nasha{
                     };
                 }
 
-                vertices.push_back(vertex);
+                if (uniqueVertices.count(vertex) == 0){
+                    uniqueVertices[vertex] = static_cast<uint32_t>(vertices.size());
+                    vertices.push_back(vertex);
+                }
+                indices.push_back(uniqueVertices[vertex]);
             }
         }
     }
