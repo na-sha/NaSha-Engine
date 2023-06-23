@@ -20,11 +20,20 @@ add_executable(Nasha
         Nasha/src/Nasha/SwapChain.cpp
         Nasha/src/Nasha/SwapChain.h
         Nasha/src/Nasha/Model.cpp
-        Nasha/src/Nasha/Model.h Nasha/src/Nasha/GameObject.h Nasha/src/Nasha/Renderer.cpp Nasha/src/Nasha/Renderer.h Nasha/src/Nasha/RenderSystem.cpp Nasha/src/Nasha/RenderSystem.h Nasha/src/Nasha/Camera.cpp Nasha/src/Nasha/Camera.h Nasha/src/Nasha/Events.cpp Nasha/src/Nasha/Events.h)
+        Nasha/src/Nasha/Model.h
+        Nasha/src/Nasha/GameObject.h
+        Nasha/src/Nasha/Renderer.cpp
+        Nasha/src/Nasha/Renderer.h
+        Nasha/src/Nasha/RenderSystem.cpp
+        Nasha/src/Nasha/RenderSystem.h
+        Nasha/src/Nasha/Camera.cpp
+        Nasha/src/Nasha/Camera.h
+        Nasha/src/Nasha/Events.cpp
+        Nasha/src/Nasha/Events.h)
 
 # Setting up Vulkan
 find_package(Vulkan REQUIRED)
-set(VULKAN_SDK_PATH /Users/nandysharma/CLionProjects/Nasha/Nasha/vendors/Vulkan)
+set(VULKAN_SDK_PATH /Users/nandysharma/dev/NaSha-Engine/Nasha/vendors/Vulkan)
 target_include_directories(${PROJECT_NAME} PUBLIC ${VULKAN_SDK_PATH}/include)
 target_link_libraries(${PROJECT_NAME} Vulkan::Vulkan)
 
@@ -41,3 +50,5 @@ endif()
 target_include_directories(${PROJECT_NAME} PUBLIC ${GLFW_INCLUDE_DIRS})
 target_link_libraries(${PROJECT_NAME} ${GLFW_LIB}/libglfw.3.3.dylib "-framework OpenGL -framework Cocoa -framework IOKit -framework CoreVideo")
 
+set(TINY_OBJ_LOADER_PATH /Users/nandysharma/dev/NaSha-Engine/Nasha/vendors/tinyobjloader)
+target_include_directories(${PROJECT_NAME} PUBLIC ${TINY_OBJ_LOADER_PATH})
