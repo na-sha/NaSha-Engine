@@ -10,7 +10,7 @@ namespace Nasha{
 
     struct SimplePushConstant{
         glm::mat4 transform{1.0f};
-        alignas(16) glm::vec3 color;
+        glm::mat4 modelMatrix{1.0f};
     };
 
     RenderSystem::RenderSystem(Device& device, VkRenderPass renderPass)
@@ -66,8 +66,9 @@ namespace Nasha{
 
         for (auto& obj : gameObjects) {
             SimplePushConstant push{};
-            push.color = obj.m_color;
-            push.transform = projectionView * obj.m_transform.mat4();
+            auto modelMatrix = obj.m_transform.mat4();
+            push.transform = projectionView * modelMatrix;
+            push.modelMatrix = modelMatrix;
 
             vkCmdPushConstants(commandBuffer,
                                m_pipelineLayout,
