@@ -10,7 +10,7 @@ namespace Nasha{
 
     struct SimplePushConstant{
         glm::mat4 transform{1.0f};
-        glm::mat4 modelMatrix{1.0f};
+        glm::mat4 normalMatrix{1.0f};
     };
 
     RenderSystem::RenderSystem(Device& device, VkRenderPass renderPass)
@@ -68,7 +68,7 @@ namespace Nasha{
             SimplePushConstant push{};
             auto modelMatrix = obj.m_transform.mat4();
             push.transform = projectionView * modelMatrix;
-            push.modelMatrix = modelMatrix;
+            push.normalMatrix = obj.m_transform.normalMatrix();
 
             vkCmdPushConstants(commandBuffer,
                                m_pipelineLayout,

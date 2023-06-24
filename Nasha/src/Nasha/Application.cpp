@@ -53,10 +53,10 @@ namespace Nasha{
 
 
     void Application::loadGameObjects() {
-        std::shared_ptr<Model> model = Model::createModelFromFile(device, "../Nasha/src/Nasha/models/smooth_vase.obj");
+        std::shared_ptr<Model> model = Model::createModelFromFile(device, "../Nasha/src/Nasha/models/flat_vase.obj");
         auto gameObj = GameObject::creteGameObject();
         gameObj.m_model = model;
-        gameObj.m_transform.translation = {.0f, .0f, 2.5f};
+        gameObj.m_transform.translation = {.0f, .5f, 2.5f};
         gameObj.m_transform.scale = glm::vec3(3.f);
 
         gameObjects.push_back((std::move(gameObj)));
