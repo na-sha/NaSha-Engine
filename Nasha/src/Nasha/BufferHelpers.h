@@ -4,19 +4,19 @@
 
 namespace Nasha {
 
-    class Buffer {
+    class BufferHelpers {
     public:
-        Buffer(
+        BufferHelpers(
                 Device& device,
                 VkDeviceSize instanceSize,
                 uint32_t instanceCount,
                 VkBufferUsageFlags usageFlags,
                 VkMemoryPropertyFlags memoryPropertyFlags,
                 VkDeviceSize minOffsetAlignment = 1);
-        ~Buffer();
+        ~BufferHelpers();
 
-        Buffer(const Buffer&) = delete;
-        Buffer& operator=(const Buffer&) = delete;
+        BufferHelpers(const BufferHelpers&) = delete;
+        BufferHelpers& operator=(const BufferHelpers&) = delete;
 
         VkResult map(VkDeviceSize size = VK_WHOLE_SIZE, VkDeviceSize offset = 0);
         void unmap();

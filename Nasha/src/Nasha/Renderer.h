@@ -18,14 +18,14 @@ namespace Nasha {
         Renderer(const Renderer &) = delete;
         Renderer &operator=(const Renderer &) = delete;
 
-        VkRenderPass getSwapChainRenderPass() const{ return swapChain -> getRenderPass(); }
-        float getAspectRatio() const { return swapChain -> extentAspectRatio(); }
-        bool isFrameInProgress() const { return isFrameStarted; }
-        VkCommandBuffer getCurrentCommandBuffer() const {
+        [[nodiscard]] VkRenderPass getSwapChainRenderPass() const{ return swapChain -> getRenderPass(); }
+        [[nodiscard]] float getAspectRatio() const { return swapChain -> extentAspectRatio(); }
+        [[nodiscard]] bool isFrameInProgress() const { return isFrameStarted; }
+        [[nodiscard]] VkCommandBuffer getCurrentCommandBuffer() const {
             assert(isFrameStarted && "Can't get command buffer when frame not in progress");
             return commandBuffers[currentFrameIndex];
         }
-        int getFrameIndex() const{
+        [[nodiscard]] int getFrameIndex() const{
             assert(isFrameStarted && "Can't get frame Index when frame not in progress");
             return currentFrameIndex;
         }

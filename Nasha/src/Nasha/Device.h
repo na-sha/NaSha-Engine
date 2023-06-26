@@ -51,7 +51,7 @@ namespace Nasha {
         VkFormat findSupportedFormat(
                 const std::vector<VkFormat> &candidates, VkImageTiling tiling, VkFormatFeatureFlags features);
 
-        // Buffer Helper Functions
+        // BufferHelpers Helper Functions
         void createBuffer(
                 VkDeviceSize size,
                 VkBufferUsageFlags usage,
