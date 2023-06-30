@@ -8,6 +8,7 @@
 #include "Renderer.h"
 #include "GameObject.h"
 #include "Camera.h"
+#include "BufferHelpers.h"
 
 #include <memory>
 #include <vector>

@@ -10,4 +10,5 @@ make
 ```
 <br><br>
 **Current Progress**
-![Screenshot 2023-06-12 at 10 06 45 PM](https://github.com/na-sha/NaSha-Engine/assets/69229070/e6b59c57-09a4-48eb-aeee-e52b68f012de)
+![Alt text](Sandbox/progress/lighting_preview.JPG)
+![Alt text](Sandbox/progress/3dcube_preview.JPG)

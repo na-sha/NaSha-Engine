@@ -7,6 +7,11 @@
 #include <chrono>
 
 namespace Nasha{
+    // UBO --> Uniform buffer object
+    struct GlobalUBO{
+        glm::mat4 projectionView{1.0f};
+        glm::vec3 lightDirection = glm::normalize(glm::vec3{1.0f, -3.0f, -1.0f});
+    };
 
     Application::Application(){
         loadGameObjects();
@@ -14,6 +19,16 @@ namespace Nasha{
     Application::~Application(){};
 
     void Application::Run(){
+        BufferHelpers globalUBOBuffer{
+          device,
+          sizeof(GlobalUBO),
+          SwapChain::MAX_FRAMES_IN_FLIGHT,
+          VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT,
+          VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT,
+          device.properties.limits.minUniformBufferOffsetAlignment
+        };
+        globalUBOBuffer.map();
+
         RenderSystem simpleRenderSystem{device, renderer.getSwapChainRenderPass()};
 
         Camera camera{};
@@ -40,10 +55,22 @@ namespace Nasha{
             camera.setPerspectiveProjection(glm::radians(50.f), aspect, 0.1f, 10.f);
 
             if (auto commandBuffer = renderer.beginFrame()){
+                int frameIndex = renderer.getFrameIndex();
+                FrameInfo frameInfo{
+                    frameIndex,
+                    frameTime,
+                    commandBuffer,
+                    camera
+                };
+                //update
+                GlobalUBO ubo{};
+                ubo.projectionView = camera.getProjectionMatrix() * camera.getViewMatrix();
+                globalUBOBuffer.writeToIndex(&ubo, frameIndex);
+                globalUBOBuffer.flush(VK_WHOLE_SIZE);
+
+                //render
                 renderer.beginSwapChainRenderPass(commandBuffer);
-                simpleRenderSystem.renderGameObjects(commandBuffer,
-                                                     gameObjects,
-                                                     camera);
+                simpleRenderSystem.renderGameObjects(frameInfo, gameObjects);
                 renderer.endSwapChainRenderPass(commandBuffer);
                 renderer.endFrame();
             }

@@ -57,12 +57,11 @@ namespace Nasha{
                                               pipelineConfig);
     }
 
-    void RenderSystem::renderGameObjects(VkCommandBuffer commandBuffer,
-                                         std::vector<GameObject>& gameObjects,
-                                         const Camera& camera) {
-        m_pipeline ->bind(commandBuffer);
+    void RenderSystem::renderGameObjects(FrameInfo& frameInfo,
+                                         std::vector<GameObject>& gameObjects) {
+        m_pipeline ->bind(frameInfo.commandBuffer);
 
-        auto projectionView = camera.getProjectionMatrix() * camera.getViewMatrix();
+        auto projectionView = frameInfo.camera.getProjectionMatrix() * frameInfo.camera.getViewMatrix();
 
         for (auto& obj : gameObjects) {
             SimplePushConstant push{};
@@ -70,14 +69,14 @@ namespace Nasha{
             push.transform = projectionView * modelMatrix;
             push.normalMatrix = obj.m_transform.normalMatrix();
 
-            vkCmdPushConstants(commandBuffer,
+            vkCmdPushConstants(frameInfo.commandBuffer,
                                m_pipelineLayout,
                                VK_SHADER_STAGE_VERTEX_BIT | VK_SHADER_STAGE_FRAGMENT_BIT,
                                0,
                                sizeof(SimplePushConstant),
                                &push);
-            obj.m_model ->bind(commandBuffer);
-            obj.m_model ->draw(commandBuffer);
+            obj.m_model ->bind(frameInfo.commandBuffer);
+            obj.m_model ->draw(frameInfo.commandBuffer);
         }
     }
 
