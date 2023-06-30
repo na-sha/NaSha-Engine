@@ -19,15 +19,17 @@ namespace Nasha{
     Application::~Application(){};
 
     void Application::Run(){
-        BufferHelpers globalUBOBuffer{
-          device,
-          sizeof(GlobalUBO),
-          SwapChain::MAX_FRAMES_IN_FLIGHT,
-          VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT,
-          VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT,
-          device.properties.limits.minUniformBufferOffsetAlignment
-        };
-        globalUBOBuffer.map();
+        std::vector<std::unique_ptr<BufferHelpers>> UBOBuffer(SwapChain::MAX_FRAMES_IN_FLIGHT);
+        for (int i = 0; i < UBOBuffer.size(); i++) {
+            UBOBuffer[i] = std::make_unique<BufferHelpers>(
+                    device,
+                    sizeof(GlobalUBO),
+                    1,
+                    VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT,
+                    VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT
+                    );
+            UBOBuffer[i]->map();
+        }
 
         RenderSystem simpleRenderSystem{device, renderer.getSwapChainRenderPass()};
 
@@ -65,8 +67,8 @@ namespace Nasha{
                 //update
                 GlobalUBO ubo{};
                 ubo.projectionView = camera.getProjectionMatrix() * camera.getViewMatrix();
-                globalUBOBuffer.writeToIndex(&ubo, frameIndex);
-                globalUBOBuffer.flush(VK_WHOLE_SIZE);
+                UBOBuffer[frameIndex] ->writeToBuffer(&ubo);
+                UBOBuffer[frameIndex] ->flush();
 
                 //render
                 renderer.beginSwapChainRenderPass(commandBuffer);
