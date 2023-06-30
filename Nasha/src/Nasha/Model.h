@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Device.h"
+#include "BufferHelpers.h"
 
 #define GLM_FORCE_DEPTH_ZERO_TO_ONE
 #include <glm/glm.hpp>
@@ -54,13 +55,12 @@ namespace Nasha{
 
     private:
         Device& m_device;
-        VkBuffer m_vertexBuffer{};
-        VkDeviceMemory m_vertexBufferMemory{};
+
+        std::unique_ptr<BufferHelpers> m_vertexBuffer{};
         uint32_t m_vertexCount{};
 
         bool hasIndexBuffer = false;
-        VkBuffer m_indexBuffer{};
-        VkDeviceMemory m_indexBufferMemory{};
+        std::unique_ptr<BufferHelpers> m_indexBuffer{};
         uint32_t m_indexCount{};
     public:
     };
