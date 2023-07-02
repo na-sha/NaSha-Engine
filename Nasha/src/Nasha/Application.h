@@ -9,6 +9,7 @@
 #include "GameObject.h"
 #include "Camera.h"
 #include "BufferHelpers.h"
+#include "Descriptors.h"
 
 #include <memory>
 #include <vector>
@@ -33,6 +34,8 @@ namespace Nasha {
         Window window{WIDTH, HEIGHT, "NASHA"};
         Device device{window};
         Renderer renderer{window, device};
+
+        std::unique_ptr<DescriptorPool> globalPool{};
         std::vector<GameObject> gameObjects;
 
     public:

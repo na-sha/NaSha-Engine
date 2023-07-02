@@ -10,10 +10,14 @@ namespace Nasha{
     // UBO --> Uniform buffer object
     struct GlobalUBO{
         glm::mat4 projectionView{1.0f};
-        glm::vec3 lightDirection = glm::normalize(glm::vec3{1.0f, -3.0f, -1.0f});
+        glm::vec3 lightDirection = glm::normalize(glm::vec3{2.0f, -3.0f, -1.0f});
     };
 
     Application::Application(){
+        globalPool = DescriptorPool::Builder(device)
+                .setMaxSets(SwapChain::MAX_FRAMES_IN_FLIGHT)
+                .addPoolSize(VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER, SwapChain::MAX_FRAMES_IN_FLIGHT)
+                .build();
         loadGameObjects();
     };
     Application::~Application(){};
@@ -31,7 +35,21 @@ namespace Nasha{
             UBOBuffer[i]->map();
         }
 
-        RenderSystem simpleRenderSystem{device, renderer.getSwapChainRenderPass()};
+        auto globalSetLayout = DescriptorSetLayout::Builder(device)
+                .addBinding(0, VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER, VK_SHADER_STAGE_VERTEX_BIT)
+                .build();
+
+        std::vector<VkDescriptorSet> globalDescriptorSet(SwapChain::MAX_FRAMES_IN_FLIGHT);
+        for (int i = 0; i < globalDescriptorSet.size(); i++) {
+            auto bufferInfo = UBOBuffer[i] ->descriptorInfo();
+            DescriptorWriter(*globalSetLayout, *globalPool)
+            .writeBuffer(0, &bufferInfo)
+            .build(globalDescriptorSet[i]);
+        }
+
+        RenderSystem simpleRenderSystem{device,
+                                        renderer.getSwapChainRenderPass(),
+                                        globalSetLayout ->getDescriptorSetLayout()};
 
         Camera camera{};
         // camera.setViewDirection(glm::vec3(0.f), glm::vec3(0.5f, 0.f, 1.f));
@@ -62,7 +80,8 @@ namespace Nasha{
                     frameIndex,
                     frameTime,
                     commandBuffer,
-                    camera
+                    camera,
+                    globalDescriptorSet[frameIndex]
                 };
                 //update
                 GlobalUBO ubo{};
@@ -82,7 +101,7 @@ namespace Nasha{
 
 
     void Application::loadGameObjects() {
-        std::shared_ptr<Model> model = Model::createModelFromFile(device, "../Nasha/src/Nasha/models/flat_vase.obj");
+        std::shared_ptr<Model> model = Model::createModelFromFile(device, "../Nasha/src/Nasha/models/viking_room.obj");
         auto gameObj = GameObject::creteGameObject();
         gameObj.m_model = model;
         gameObj.m_transform.translation = {.0f, .5f, 2.5f};
