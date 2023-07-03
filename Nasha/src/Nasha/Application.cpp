@@ -10,7 +10,10 @@ namespace Nasha{
     // UBO --> Uniform buffer object
     struct GlobalUBO{
         glm::mat4 projectionView{1.0f};
-        glm::vec3 lightDirection = glm::normalize(glm::vec3{2.0f, -3.0f, -1.0f});
+        // glm::vec3 lightDirection = glm::normalize(glm::vec3{2.0f, -3.0f, -1.0f});
+        glm::vec4 ambientLightColor{1.0f, 1.0f, 1.0f, 0.09f};
+        glm::vec3 lightPosition{-1.0f};
+        alignas(16) glm::vec4 lightColor{1.0f};
     };
 
     Application::Application(){
@@ -101,7 +104,7 @@ namespace Nasha{
 
 
     void Application::loadGameObjects() {
-        std::shared_ptr<Model> model = Model::createModelFromFile(device, "../Nasha/src/Nasha/models/viking_room.obj");
+        std::shared_ptr<Model> model = Model::createModelFromFile(device, "../Nasha/src/Nasha/models/flat_vase.obj");
         auto gameObj = GameObject::creteGameObject();
         gameObj.m_model = model;
         gameObj.m_transform.translation = {.0f, .5f, 2.5f};
