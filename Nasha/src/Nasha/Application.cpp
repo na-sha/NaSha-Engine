@@ -12,7 +12,7 @@ namespace Nasha{
         glm::mat4 projectionView{1.0f};
         // glm::vec3 lightDirection = glm::normalize(glm::vec3{2.0f, -3.0f, -1.0f});
         glm::vec4 ambientLightColor{1.0f, 1.0f, 1.0f, 0.09f};
-        glm::vec3 lightPosition{-1.0f};
+        glm::vec3 lightPosition{0.0f, -1.0f, -1.0f};
         alignas(16) glm::vec4 lightColor{1.0f};
     };
 
@@ -39,7 +39,9 @@ namespace Nasha{
         }
 
         auto globalSetLayout = DescriptorSetLayout::Builder(device)
-                .addBinding(0, VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER, VK_SHADER_STAGE_VERTEX_BIT)
+                .addBinding(0,
+                            VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER,
+                            VK_SHADER_STAGE_ALL_GRAPHICS)
                 .build();
 
         std::vector<VkDescriptorSet> globalDescriptorSet(SwapChain::MAX_FRAMES_IN_FLIGHT);
@@ -106,11 +108,18 @@ namespace Nasha{
 
     void Application::loadGameObjects() {
         std::shared_ptr<Model> model = Model::createModelFromFile(device, "../Nasha/src/Nasha/models/flat_vase.obj");
-        auto gameObj = GameObject::creteGameObject();
-        gameObj.m_model = model;
-        gameObj.m_transform.translation = {.0f, .5f, 0.0f};
-        gameObj.m_transform.scale = glm::vec3(3.f);
-        gameObjects.push_back((std::move(gameObj)));
+        auto flatVase = GameObject::creteGameObject();
+        flatVase.m_model = model;
+        flatVase.m_transform.translation = {-0.5f, .5f, 0.0f};
+        flatVase.m_transform.scale = glm::vec3(3.f);
+        gameObjects.push_back((std::move(flatVase)));
+
+        model = Model::createModelFromFile(device, "../Nasha/src/Nasha/models/smooth_vase.obj");
+        auto smoothVase = GameObject::creteGameObject();
+        smoothVase.m_model = model;
+        smoothVase.m_transform.translation = {0.5f, .5f, 0.0f};
+        smoothVase.m_transform.scale = glm::vec3(3.f);
+        gameObjects.push_back((std::move(smoothVase)));
 
         model = Model::createModelFromFile(device, "../Nasha/src/Nasha/models/quad.obj");
         auto floor = GameObject::creteGameObject();
