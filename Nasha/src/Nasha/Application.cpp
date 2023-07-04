@@ -59,6 +59,7 @@ namespace Nasha{
         camera.setViewTarget(glm::vec3(-1.f, -2.f, 2.f), glm::vec3(0.f, 0.f, 2.5f));
 
         auto viewerObject = GameObject::creteGameObject();
+        viewerObject.m_transform.translation.z = -2.5f;
         Events cameraController{};
 
         auto currentTime = std::chrono::high_resolution_clock::now();
@@ -75,7 +76,7 @@ namespace Nasha{
 
             float aspect = renderer.getAspectRatio();
             //camera.setOrthographicProjection(-aspect, aspect, -1, 1, -1, 1);
-            camera.setPerspectiveProjection(glm::radians(50.f), aspect, 0.1f, 10.f);
+            camera.setPerspectiveProjection(glm::radians(50.f), aspect, 0.1f, 100.0f);
 
             if (auto commandBuffer = renderer.beginFrame()){
                 int frameIndex = renderer.getFrameIndex();
@@ -107,10 +108,16 @@ namespace Nasha{
         std::shared_ptr<Model> model = Model::createModelFromFile(device, "../Nasha/src/Nasha/models/flat_vase.obj");
         auto gameObj = GameObject::creteGameObject();
         gameObj.m_model = model;
-        gameObj.m_transform.translation = {.0f, .5f, 2.5f};
+        gameObj.m_transform.translation = {.0f, .5f, 0.0f};
         gameObj.m_transform.scale = glm::vec3(3.f);
-
         gameObjects.push_back((std::move(gameObj)));
+
+        model = Model::createModelFromFile(device, "../Nasha/src/Nasha/models/quad.obj");
+        auto floor = GameObject::creteGameObject();
+        floor.m_model = model;
+        floor.m_transform.translation = {0.0f, .5f, 0.0f};
+        floor.m_transform.scale = glm::vec3(3.0f, 1.0f, 3.0f);
+        gameObjects.push_back((std::move(floor)));
     }
 
 }
