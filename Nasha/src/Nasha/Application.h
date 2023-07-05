@@ -36,11 +36,11 @@ namespace Nasha {
         Renderer renderer{window, device};
 
         std::unique_ptr<DescriptorPool> globalPool{};
-        std::vector<GameObject> gameObjects;
+        GameObject::Map gameObjects;
 
     public:
-        static constexpr int WIDTH = 800;
-        static constexpr int HEIGHT = 600;
+        static constexpr int WIDTH = 1024;
+        static constexpr int HEIGHT = 768;
     };
 
 // We have to define it in client

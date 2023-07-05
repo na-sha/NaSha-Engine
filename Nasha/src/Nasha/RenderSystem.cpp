@@ -62,8 +62,7 @@ namespace Nasha{
                                               pipelineConfig);
     }
 
-    void RenderSystem::renderGameObjects(FrameInfo& frameInfo,
-                                         std::vector<GameObject>& gameObjects) {
+    void RenderSystem::renderGameObjects(FrameInfo& frameInfo) {
         m_pipeline ->bind(frameInfo.commandBuffer);
 
         vkCmdBindDescriptorSets(
@@ -76,7 +75,8 @@ namespace Nasha{
                 0,
                 nullptr);
 
-        for (auto& obj : gameObjects) {
+        for (auto& key : frameInfo.gameObject) {
+            auto& obj = key.second;
             SimplePushConstant push{};
             push.modelMatrix = obj.m_transform.mat4();
             push.normalMatrix = obj.m_transform.normalMatrix();

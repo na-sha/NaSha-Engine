@@ -5,6 +5,7 @@
 #include <glm/gtc/matrix_transform.hpp>
 
 #include <memory>
+#include <unordered_map>
 
 namespace Nasha{
     struct TransformComponent{
@@ -19,6 +20,8 @@ namespace Nasha{
     class GameObject{
     public:
         using id_t = unsigned int;
+        using Map = std::unordered_map<id_t, GameObject>;
+
         static GameObject creteGameObject(){
             static id_t currentID = 0;
             return GameObject(currentID++);

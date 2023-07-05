@@ -9,6 +9,6 @@ cmake ..
 make
 ```
 <br><br>
-**Current Progress**
-![Alt text](Sandbox/progress/lighting_preview.JPG)
-![Alt text](Sandbox/progress/3dcube_preview.JPG)
+**Current Progress**(All images available at dir /Sandbox/progress)
+![Alt text](./Sandbox/progress/multiple_obj_point_light_preview.JPG)
+![Alt text](./Sandbox/progress/3dcube_preview.JPG)
