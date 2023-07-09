@@ -9,7 +9,8 @@
 namespace Nasha{
     // UBO --> Uniform buffer object
     struct GlobalUBO{
-        glm::mat4 projectionView{1.0f};
+        glm::mat4 projection{1.0f};
+        glm::mat4 view{1.0f};
         // glm::vec3 lightDirection = glm::normalize(glm::vec3{2.0f, -3.0f, -1.0f});
         glm::vec4 ambientLightColor{1.0f, 1.0f, 1.0f, 0.09f};
         glm::vec3 lightPosition{0.0f, -1.0f, -1.0f};
@@ -55,6 +56,9 @@ namespace Nasha{
         RenderSystem simpleRenderSystem{device,
                                         renderer.getSwapChainRenderPass(),
                                         globalSetLayout ->getDescriptorSetLayout()};
+        PointLightSystem pointLightSystem{device,
+                                          renderer.getSwapChainRenderPass(),
+                                          globalSetLayout ->getDescriptorSetLayout()};
 
         Camera camera{};
         // camera.setViewDirection(glm::vec3(0.f), glm::vec3(0.5f, 0.f, 1.f));
@@ -92,13 +96,15 @@ namespace Nasha{
                 };
                 //update
                 GlobalUBO ubo{};
-                ubo.projectionView = camera.getProjectionMatrix() * camera.getViewMatrix();
+                ubo.projection = camera.getProjectionMatrix() ;
+                ubo.view = camera.getViewMatrix();
                 UBOBuffer[frameIndex] ->writeToBuffer(&ubo);
                 UBOBuffer[frameIndex] ->flush();
 
                 //render
                 renderer.beginSwapChainRenderPass(commandBuffer);
                 simpleRenderSystem.renderGameObjects(frameInfo);
+                pointLightSystem.render(frameInfo);
                 renderer.endSwapChainRenderPass(commandBuffer);
                 renderer.endFrame();
             }

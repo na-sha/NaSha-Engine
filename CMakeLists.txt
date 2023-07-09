@@ -24,8 +24,8 @@ add_executable(Nasha
         Nasha/src/Nasha/GameObject.h
         Nasha/src/Nasha/Renderer.cpp
         Nasha/src/Nasha/Renderer.h
-        Nasha/src/Nasha/RenderSystem.cpp
-        Nasha/src/Nasha/RenderSystem.h
+        Nasha/src/Nasha/RenderingSystems/RenderSystem.cpp
+        Nasha/src/Nasha/RenderingSystems/RenderSystem.h
         Nasha/src/Nasha/Camera.cpp
         Nasha/src/Nasha/Camera.h
         Nasha/src/Nasha/Events.cpp
@@ -36,7 +36,7 @@ add_executable(Nasha
         Nasha/src/Nasha/BufferHelpers.h
         Nasha/src/Nasha/FrameInfo.h
         Nasha/src/Nasha/Descriptors.cpp
-        Nasha/src/Nasha/Descriptors.h)
+        Nasha/src/Nasha/Descriptors.h Nasha/src/Nasha/RenderingSystems/PointLightSystem.cpp Nasha/src/Nasha/RenderingSystems/PointLightSystem.h)
 
 # Setting up Vulkan
 find_package(Vulkan REQUIRED)

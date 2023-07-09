@@ -1,9 +1,9 @@
 #pragma once
 
-#include "FrameInfo.h"
-#include "Pipeline.h"
-#include "Device.h"
-#include "GameObject.h"
+#include "../FrameInfo.h"
+#include "../Pipeline.h"
+#include "../Device.h"
+#include "../GameObject.h"
 
 #include <memory>
 #include <vector>
