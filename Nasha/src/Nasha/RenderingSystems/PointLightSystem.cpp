@@ -48,6 +48,8 @@ namespace Nasha{
         assert(m_pipelineLayout != nullptr && "Cannot create pipeline before pipeline layout");
         PipelineConfigInfo pipelineConfig{};
         Pipeline::defaultPipelineConfigInfo(pipelineConfig);
+        pipelineConfig.attributeDescriptions.clear();
+        pipelineConfig.bindingDescriptions.clear();
         pipelineConfig.renderPass = renderPass;
         pipelineConfig.pipelineLayout = m_pipelineLayout;
         m_pipeline = std::make_unique<Pipeline>(m_device,
