@@ -7,8 +7,9 @@
 
 namespace Nasha{
     struct PipelineConfigInfo{
-        PipelineConfigInfo(const PipelineConfigInfo &) = delete;
-        PipelineConfigInfo &operator=(const PipelineConfigInfo &) = delete;
+        PipelineConfigInfo() = default;
+        PipelineConfigInfo(const PipelineConfigInfo&) = delete;
+        PipelineConfigInfo& operator=(const PipelineConfigInfo&) = delete;
 
         std::vector<VkVertexInputBindingDescription> bindingDescriptions{};
         std::vector<VkVertexInputAttributeDescription> attributeDescriptions{};

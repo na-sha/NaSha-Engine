@@ -1,4 +1,4 @@
-#include "../../Nasha/src/Nasha.h"
+#include "../../../Nasha/src/Nasha.h"
 
 class Sandbox : public Nasha::Application{
 private:

@@ -4532,9 +4532,15 @@ VKAPI_ATTR void VKAPI_CALL vkCmdSetStencilReference(
     VkStencilFaceFlags                          faceMask,
     uint32_t                                    reference);
 
-VKAPI_ATTR void VKAPI_CALL vkCmdBindDescriptorSets(VkCommandBuffer pT, VkPipelineBindPoint point,
-                                                   VkPipelineLayout pLayoutT, int i, int i1,
-                                                   VkDescriptorSet *pSetT, int i2, nullptr_t pVoid);
+VKAPI_ATTR void VKAPI_CALL vkCmdBindDescriptorSets(
+    VkCommandBuffer                             commandBuffer,
+    VkPipelineBindPoint                         pipelineBindPoint,
+    VkPipelineLayout                            layout,
+    uint32_t                                    firstSet,
+    uint32_t                                    descriptorSetCount,
+    const VkDescriptorSet*                      pDescriptorSets,
+    uint32_t                                    dynamicOffsetCount,
+    const uint32_t*                             pDynamicOffsets);
 
 VKAPI_ATTR void VKAPI_CALL vkCmdBindIndexBuffer(
     VkCommandBuffer                             commandBuffer,
