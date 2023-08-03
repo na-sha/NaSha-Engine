@@ -10,5 +10,6 @@ make
 ```
 <br><br>
 **Current Progress**(All images available at dir /Sandbox/progress)
-![Alt text](./Sandbox/progress/multiple_obj_point_light_preview.JPG)
-![Alt text](./Sandbox/progress/3dcube_preview.JPG)
+![Alt text](./sandbox/progress/multiple_lights%20&&%20specular_lighting.JPG)
+![Alt text](./sandbox/progress/multiple_obj_point_light_preview.JPG)
+![Alt text](./sandbox/progress/3dcube_preview.JPG)
