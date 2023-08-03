@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.25)
-project(Nasha)
+project(nashaEngine-dev)
 
 set(CMAKE_CXX_STANDARD 20)
 
@@ -15,11 +15,11 @@ if (CMAKE_GENERATOR STREQUAL "MinGW Makefiles") # Only for windows
 endif()
 
 # Setting up Vulkan
-set(VULKAN_SDK_PATH ${PROJECT_SOURCE_DIR}/Nasha/vendors/Vulkan)
+set(VULKAN_SDK_PATH "/Users/nandysharma/VulkanSDK/1.3.250.1/macOS")
 if (DEFINED VULKAN_SDK_PATH)
     message(STATUS "Found Vulkan")
-    set(Vulkan_INCLUDE_DIRS "${VULKAN_SDK_PATH}/Include")
-    set(Vulkan_LIBRARIES "${VULKAN_SDK_PATH}/Lib")
+    set(Vulkan_INCLUDE_DIRS "${VULKAN_SDK_PATH}/include")
+    set(Vulkan_LIBRARIES "${VULKAN_SDK_PATH}/lib")
     set(Vulkan_FOUND "True")
 else()
     find_package(Vulkan REQUIRED) # throws error if could not find Vulkan
@@ -32,7 +32,7 @@ else()
 endif()
 
 # Setting up GLFW
-set(GLFW_PATH ${PROJECT_SOURCE_DIR}/Nasha/vendors/GLFW)
+set(GLFW_PATH ${PROJECT_SOURCE_DIR}/vendors/GLFW)
 if (DEFINED GLFW_PATH)
     message(STATUS "GLFW_PATH found")
     set(GLFW_INCLUDE_DIRS "${GLFW_PATH}/include")
@@ -48,15 +48,20 @@ else()
     message(STATUS "Using glfw lib at: ${GLFW_LIB}")
 endif()
 
-# Setting up tinyobjloader
-set(TINY_OBJ_LOADER_PATH /Users/nandysharma/dev/NaSha-Engine/Nasha/vendors/tinyobjloader)
+# Setting up tinyObjLoader
+set(TINY_OBJ_LOADER_PATH ${PROJECT_SOURCE_DIR}/vendors/tinyobjloader)
+if (DEFINED TINY_OBJ_LOADER_PATH)
+    message(STATUS "tiny_obj_loader path found")
+    set(TINY_OBJ_LOADER_INCLUDE_DIR "${TINY_OBJ_LOADER_PATH}")
+else()
+    find_package(tiny_obj_loader REQUIRED)
+endif()
 
 file(GLOB_RECURSE SOURCES
-        ${PROJECT_SOURCE_DIR}/Nasha/src/*.cpp
-        ${PROJECT_SOURCE_DIR}/Nasha/src/Nasha/*.cpp
-        ${PROJECT_SOURCE_DIR}/Sandbox/src/Nasha/main.cpp)
+        ${PROJECT_SOURCE_DIR}/source/nasha/**.cpp
+        ${PROJECT_SOURCE_DIR}/sandbox/nasha/main.cpp)
 
-add_executable(${PROJECT_NAME} ${SOURCES})
+add_executable(${PROJECT_NAME} ${SOURCES} source/nasha/core/Core.inl source/nasha/core/EntryPoint.h source/nasha/nasha.inl)
 
 target_compile_features(${PROJECT_NAME} PUBLIC cxx_std_17)
 
@@ -93,7 +98,8 @@ elseif (UNIX)
     target_include_directories(${PROJECT_NAME} PUBLIC
             ${Vulkan_INCLUDE_DIRS}
             ${GLFW_INCLUDE_DIRS}
-            ${TINY_OBJ_LOADER_PATH}
+            ${TINY_OBJ_LOADER_INCLUDE_DIR}
+            "${CMAKE_CURRENT_SOURCE_DIR}/source/nasha"
             )
     target_link_libraries(${PROJECT_NAME}
             ${Vulkan_LIBRARIES}/libvulkan.1.dylib
